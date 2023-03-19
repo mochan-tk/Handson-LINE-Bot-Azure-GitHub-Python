@@ -16,7 +16,7 @@ var cosmosContainerName = 'Accounts'
 
 @description('That name is the name of our application. It has to be unique.Type a name followed by your resource group name. (<name>-<resourceGroupName>)')
 param cognitiveServiceName string = 'CognitiveService-${uniqueString(resourceGroup().id)}'
-
+/*
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: storageAccountName
   location: location
@@ -117,7 +117,7 @@ resource cognitiveService 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
     }
   }
 }
-
+*/
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-12-01' existing = {
   name: containerRegistryName
 }
@@ -219,6 +219,7 @@ resource containerApps 'Microsoft.App/containerApps@2022-10-01' = {
               name: 'CHANNEL_ACCESS_TOKEN'
               value: access
             }
+            /*
             {
               name: 'STORAGE_CONNECTION_STRING'
               value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value}'
@@ -251,6 +252,7 @@ resource containerApps 'Microsoft.App/containerApps@2022-10-01' = {
               name: 'COGNITIVESERVICE_ENDPOINT'
               value: cognitiveService.properties.endpoint
             }
+            */
           ]
         }
       ]
