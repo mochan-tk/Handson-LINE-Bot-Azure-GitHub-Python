@@ -212,11 +212,11 @@ resource containerApps 'Microsoft.App/containerApps@2022-10-01' = {
           }
           env: [
             {
-              name: 'CHANNEL_SECRET'
+              name: 'LINE_CHANNEL_SECRET'
               value: secret
             }
             {
-              name: 'CHANNEL_ACCESS_TOKEN'
+              name: 'LINE_CHANNEL_ACCESS_TOKEN'
               value: access
             }
             /*
