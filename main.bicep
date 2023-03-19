@@ -147,7 +147,7 @@ resource openAiAccountName_openAIModelDeployment 'Microsoft.CognitiveServices/ac
     model: {
       format: 'OpenAI'
       name: 'gpt-35-turbo'
-      version: '1'
+      version: '0301'
     }
     scaleSettings: {
       scaleType: 'Standard'

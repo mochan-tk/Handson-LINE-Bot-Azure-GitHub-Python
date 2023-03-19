@@ -36,6 +36,7 @@ secret=<your secret>
 access=<your access token>
 ## ココでrandomな値を取得 > https://1password.com/jp/password-generator/
 random=<random value>
+appsPort=5000
 
 ## secretとaccessはLINE Developersのチャネル設定でメモした値を入れる
 az deployment group create --name deployPrj01 --template-file main.bicep \
