@@ -19,9 +19,11 @@ az group create --name ${group_name} --location japaneast
 az configure --defaults group=${group_name}
 
 containerVer=v1
+gitRepository=＜your ripogitry＞
 
 az deployment group create --name deployAcr01 --template-file containerRegistry.bicep \
- --parameters containerVer=${containerVer}
+ --parameters containerVer=${containerVer} \
+ --parameters gitRepository=${gitRepository}
 
 # ACRの名前取得
 az deployment group show \

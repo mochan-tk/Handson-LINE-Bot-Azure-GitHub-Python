@@ -207,7 +207,7 @@ resource containerApps 'Microsoft.App/containerApps@2022-10-01' = {
           command: []
           resources: {
             cpu: json('0.5')
-            memory: '1Gi'
+            memory: '2Gi'
 
           }
           env: [
