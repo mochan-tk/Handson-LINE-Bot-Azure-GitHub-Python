@@ -26,6 +26,13 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
+import openai
+
+# https://learn.microsoft.com/en-us/azure/cognitive-services/openai/chatgpt-quickstart?tabs=command-line&pivots=programming-language-python
+openai.api_type = "azure"
+openai.api_base = os.getenv("OPENAI_API_BASE") 
+openai.api_version = "2022-12-01"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = Flask(__name__)
 
@@ -64,9 +71,23 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
+
+    # https://learn.microsoft.com/en-us/azure/cognitive-services/openai/how-to/chatgpt
+    response = openai.Completion.create(
+        engine="gpt-35-turbo",
+        prompt=f'<|im_start|>system\nあなたは優秀なアシスタントです。\n<|im_end|>\n<|im_start|>user\n{event.message.text}\n<|im_end|>\n<|im_start|>assistant\n',
+        temperature=1,
+        max_tokens=800,
+        top_p=0.95,
+        frequency_penalty=0,
+        presence_penalty=0,
+        stop=["<|im_end|>"])
+
+    print(response['choices'][0]['text'])
+
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text)
+        TextSendMessage(text=response['choices'][0]['text'])
     )
 
 

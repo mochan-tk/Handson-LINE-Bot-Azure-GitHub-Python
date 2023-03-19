@@ -1,6 +1,6 @@
 
 
-'''
+```
 az login --use-device-code
 
 ## 下記を実行でAzureのサブスクリプションIDを取得
@@ -43,12 +43,17 @@ az deployment group create --name deployPrj01 --template-file main.bicep \
  --parameters containerRegistryName=${containerRegistryName} \
  --parameters random=${random} \
  --parameters secret=${secret} \
- --parameters access=${access}
+ --parameters access=${access} \
+ --parameters appsPort=${appsPort}
 
 ## エンドポイントURLの取得
 az deployment group show \
  -g ${group_name} \
  -n deployPrj01 \
  --query properties.outputs.acaUrl.value
-'''
+```
+
+```
+gunicorn --bind 0.0.0.0:5000 app:app -c app.py 
+```
 

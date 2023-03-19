@@ -5,6 +5,7 @@ param secret string
 param access string
 param containerRegistryName string
 param containerVer string
+param appsPort string
 
 var appInsightsName = 'AppInsights'
 var storageAccountName = 'fnstor${toLower(substring(replace(random, '-', ''), 0, 18))}'
@@ -16,6 +17,11 @@ var cosmosContainerName = 'Accounts'
 
 @description('That name is the name of our application. It has to be unique.Type a name followed by your resource group name. (<name>-<resourceGroupName>)')
 param cognitiveServiceName string = 'CognitiveService-${uniqueString(resourceGroup().id)}'
+
+param openAiAccountName string = 'OpenAI-${uniqueString(resourceGroup().id)}'
+param openAIModelDeploymentName string = 'OpenAIDev-${uniqueString(resourceGroup().id)}'
+param openAiRegion string = 'East US'
+
 /*
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: storageAccountName
@@ -117,7 +123,38 @@ resource cognitiveService 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
     }
   }
 }
+
 */
+
+// https://github.com/Azure-Samples/cosmosdb-chatgpt/blob/4ce83e6236cf311beb3a7b2367932c8c7b429268/azuredeploy.bicep#L111
+resource openAiAccount 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
+  name: openAiAccountName
+  location: openAiRegion
+  sku: {
+    name: 'S0'
+  }
+  kind: 'OpenAI'
+  properties: {
+    customSubDomainName: openAiAccountName
+    publicNetworkAccess: 'Enabled'
+  }
+}
+
+resource openAiAccountName_openAIModelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2022-12-01' = {
+  parent: openAiAccount
+  name: openAIModelDeploymentName
+  properties: {
+    model: {
+      format: 'OpenAI'
+      name: 'gpt-35-turbo'
+      version: '1'
+    }
+    scaleSettings: {
+      scaleType: 'Standard'
+    }
+  }
+}
+
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-12-01' existing = {
   name: containerRegistryName
 }
@@ -196,7 +233,7 @@ resource containerApps 'Microsoft.App/containerApps@2022-10-01' = {
       ingress: {
         external: true
         transport: 'auto'
-        targetPort: 3000
+        targetPort: appsPort
       }
     }
     template: {
@@ -206,7 +243,7 @@ resource containerApps 'Microsoft.App/containerApps@2022-10-01' = {
           image: '${containerRegistry.name}.azurecr.io/${containerImageName}:${containerImageTag}'
           command: []
           resources: {
-            cpu: json('0.5')
+            cpu: json('1.0')
             memory: '2Gi'
 
           }
@@ -218,6 +255,14 @@ resource containerApps 'Microsoft.App/containerApps@2022-10-01' = {
             {
               name: 'LINE_CHANNEL_ACCESS_TOKEN'
               value: access
+            }
+            {
+              name: 'OPENAI_API_KEY'
+              value: openAiAccount.listKeys().key1
+            }
+            {
+              name: 'OPENAI_API_BASE'
+              value: openAiAccount.properties.endpoint
             }
             /*
             {
