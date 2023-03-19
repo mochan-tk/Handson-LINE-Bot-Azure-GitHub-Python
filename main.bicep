@@ -1,16 +1,16 @@
 // playground:https://bicepdemo.z22.web.core.windows.net/
 param location string = resourceGroup().location
-param ramdom string
+param random string
 param secret string
 param access string
 param containerRegistryName string
 param containerVer string
 
 var appInsightsName = 'AppInsights'
-var storageAccountName = 'fnstor${toLower(substring(replace(ramdom, '-', ''), 0, 18))}'
+var storageAccountName = 'fnstor${toLower(substring(replace(random, '-', ''), 0, 18))}'
 var containerName = 'files'
 
-param accountName string = 'cosmos-${toLower(ramdom)}'
+param accountName string = 'cosmos-${toLower(random)}'
 var databaseName = 'SimpleDB'
 var cosmosContainerName = 'Accounts'
 
