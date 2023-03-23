@@ -20,7 +20,8 @@ param cognitiveServiceName string = 'CognitiveService-${uniqueString(resourceGro
 
 param openAiAccountName string = 'OpenAI-${uniqueString(resourceGroup().id)}'
 param openAIModelDeploymentName string = 'OpenAIDev-${uniqueString(resourceGroup().id)}'
-param openAiRegion string = 'East US'
+//param openAiRegion string = 'East US'
+param openAiRegion string = 'South Central US'
 
 /*
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
@@ -263,6 +264,10 @@ resource containerApps 'Microsoft.App/containerApps@2022-10-01' = {
             {
               name: 'OPENAI_API_BASE'
               value: openAiAccount.properties.endpoint
+            }
+            {
+              name: 'OPENAI_API_ENGINE_NAME'
+              value: openAIModelDeploymentName
             }
             /*
             {
