@@ -29,8 +29,13 @@ from linebot.models import (
 import openai
 
 # https://learn.microsoft.com/en-us/azure/cognitive-services/openai/chatgpt-quickstart?tabs=command-line&pivots=programming-language-python
+# openai.api_type = "azure"
+# openai.api_base = "https://azureopenaiservices0226.openai.azure.com/"
+# openai.api_version = "2022-12-01"
+# openai.api_key = "0e10eb24d9c24a79a91c6312fc0e7918"
+
 openai.api_type = "azure"
-openai.api_base = os.getenv("OPENAI_API_BASE") 
+openai.api_base = os.getenv("OPENAI_API_BASE")
 openai.api_version = "2022-12-01"
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -52,7 +57,6 @@ handler = WebhookHandler(channel_secret)
 
 @app.route("/callback", methods=['POST'])
 def callback():
-    print('start')
     # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
 
@@ -73,9 +77,10 @@ def callback():
 def message_text(event):
 
     # https://learn.microsoft.com/en-us/azure/cognitive-services/openai/how-to/chatgpt
+    # https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb
     response = openai.Completion.create(
-        engine="gpt-35-turbo",
-        prompt=f'<|im_start|>system\nあなたは優秀なアシスタントです。\n<|im_end|>\n<|im_start|>user\n{event.message.text}\n<|im_end|>\n<|im_start|>assistant\n',
+        engine="gpt-35-tubo-deployment",
+        prompt=f'<|im_start|>user\n{event.message.text}\n<|im_end|>\n<|im_start|>assistant',
         temperature=1,
         max_tokens=800,
         top_p=0.95,
