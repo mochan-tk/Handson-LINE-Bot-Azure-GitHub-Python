@@ -79,7 +79,7 @@ def message_text(event):
     # https://learn.microsoft.com/en-us/azure/cognitive-services/openai/how-to/chatgpt
     # https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb
     response = openai.Completion.create(
-        engine="gpt-35-tubo-deployment",
+        engine=os.getenv("OPENAI_API_ENGINE_NAME"),
         prompt=f'<|im_start|>user\nHello!\n<|im_end|>\n<|im_start|>assistant',
         temperature=1,
         max_tokens=800,
